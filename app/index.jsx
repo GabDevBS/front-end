@@ -1,51 +1,80 @@
-import { StyleSheet, Text, View, TextInput,TouchableOpacity } from 'react-native'
-import { React, useState } from 'react'
-import { Link } from 'expo-router'
+import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native'
+import { React, useEffect, useState } from 'react'
+import { Link, useRouter } from 'expo-router'
 
 export default function index() {
-const [nome, setNome] = useState ('')
-const [email, setEmail] = useState ('')
+  const router = useRouter();
+  const [email, setEmail] = useState('')
+  const [senha, setSenha] = useState('')
+  const [visivel, setVisivel] =useState(false)
 
+  const Login = () => {
+    const dados = {
+      email,
+      senha
+    }
+    fetch('http://localhost:8800/login',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dados)
+      })
+      .then(res => res.json())
+      .then(dados => {
+        if (dados.token) {
+          router.replace('/home')
+        } else {
+          alert("Usuário e/ou senha incorretos")
+        }
+      })
+  }
   return (
     <View style={styles.background}>
       <View style={styles.div}>
         <Text style={{
-          fontSize: '15px',
+          fontSize: '25px',
           fontWeight: 'bold',
           marginBottom: '5px'
         }}>Bem-Vindo(a)</Text>
-        <Text>Nome</Text>
-        <TextInput
-        placeholder='Digite seu nome completo'
-        placeholderTextColor={'#999'}
-        onChangeText={setNome}
-        value= {nome}
-        />
-
         <Text>Email</Text>
         <TextInput
-        placeholder='nome@exemplo.com'
-        placeholderTextColor={'#999'}
-        onChangeText={setEmail}
-        value= {email}
+          placeholder='nome@exemplo.com'
+          placeholderTextColor={'#999'}
+          onChangeText={setEmail}
+          value={email}
+          style={styles.input}
         />
-        <Link href={'/home'}>
-        <TouchableOpacity>Sign In</TouchableOpacity>
-        </Link>
+        <Text>Senha</Text>
+        <TextInput
+          placeholder='Digite sua senha'
+          placeholderTextColor={'#999'}
+          onChangeText={setSenha}
+          value={senha}
+          style={styles.input}
+          secureTextEntry={!visivel}
+        />
+        <TouchableOpacity onPress={() => setVisivel(!visivel)}>
+          <Text style={{color:'black'}}>{visivel ? 'Ocultar' : 'Mostrar'}</Text>
+        </TouchableOpacity>
+        <Text style={styles.textbutton}>
+          <TouchableOpacity activeOpacity={0.6} style={styles.button} onPress={Login}>Sign In</TouchableOpacity>
+        </Text>
       </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  background:{
-    flex:1,
-    backgroundColor:'#f7f4f9',
-    justifyContent:'center',
-    alignItems:'center'
+  background: {
+    flex: 1,
+    backgroundColor: '#f7f4f9',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
-  div:{
-    backgroundColor:'#e9e4ed',
+  div: {
+    backgroundColor: '#e9e4ed',
     padding: '70px',
     width: '50%',
     borderRadius: '10px',
@@ -55,10 +84,31 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  label:{
+  label: {
     fontSize: '15px',
     fontWeight: 'bold',
     marginBottom: '5px'
+  },
+  textbutton: {
+    fontSize: '20px',
+    color: '#f2eef5',
+  },
+  button: {
+    backgroundColor: '#68507b',
+    textAlign: 'center',
+    padding: '20px',
+    width: '100%',
+    borderRadius: '10px'
+  },
+  input: {
+    backgroundColor: '#fff',
+    height: 45,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 15,
+    fontSize: 16
   },
 })
 
