@@ -55,9 +55,10 @@ export default function index() {
           style={styles.input}
           secureTextEntry={!visivel}
         />
-        <TouchableOpacity onPress={() => setVisivel(!visivel)}>
-          <Text style={{color:'black'}}>{visivel ? 'Ocultar' : 'Mostrar'}</Text>
+        <TouchableOpacity onPress={() => setVisivel(!visivel)} style={styles.buttonVisivel}>
+          <Text style={{color:'#f2eef5'}}>{visivel ? 'Ocultar' : 'Mostrar'}</Text>
         </TouchableOpacity>
+        <br />
         <Text style={styles.textbutton}>
           <TouchableOpacity activeOpacity={0.6} style={styles.button} onPress={Login}>Sign In</TouchableOpacity>
         </Text>
@@ -110,6 +111,14 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     fontSize: 16
   },
+  buttonVisivel:{
+    flex:1,
+    padding: 5,
+    width: 100,
+    backgroundColor:'#68507b',
+    borderRadius:5,
+    alignItems:'center'
+  }
 })
 
 
